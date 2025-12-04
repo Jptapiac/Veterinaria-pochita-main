@@ -1,0 +1,222 @@
+||{% extends "base.html" %}
+
+{% block title %}Panel Principal - Veterinaria Pochita{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
+            <div class="position-sticky pt-3">
+                <div class="text-center mb-4">
+                    <div class="user-avatar mb-2">
+                        <i class="fas fa-user-circle fa-4x text-primary"></i>
+                    </div>
+                    <h6 id="user-name" class="mb-1">Cargando...</h6>
+                    <small id="user-role" class="text-muted">Usuario</small>
+                </div>
+                
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/dashboard/" onclick="event.preventDefault(); if(typeof navigateToSection === 'function') { navigateToSection('dashboard', this); } else if(typeof loadSection === 'function') { loadSection('dashboard'); document.querySelectorAll('.sidebar .nav-link').forEach(l => l.classList.remove('active')); this.classList.add('active'); } return false;">
+                            <i class="fas fa-home"></i> Panel Principal
+                        </a>
+                    </li>
+                    <li class="nav-item" id="menu-pets">
+                        <a class="nav-link" href="#" data-section="pets">
+                            <i class="fas fa-paw"></i> Mis Mascotas
+                        </a>
+                    </li>
+                    <li class="nav-item" id="menu-appointments-alt">
+                        <a class="nav-link" href="#" data-section="appointments">
+                            <i class="fas fa-clock"></i> Mis Citas
+                        </a>
+                    </li>
+                    <li class="nav-item" id="menu-medical-records">
+                        <a class="nav-link" href="#" data-section="medical-records">
+                            <i class="fas fa-file-medical"></i> Ver Historial
+                        </a>
+                    </li>
+                    <li class="nav-item" id="menu-agenda">
+                        <a class="nav-link" href="#" data-section="appointments">
+                            <i class="fas fa-calendar-alt"></i> Mi Agenda
+                        </a>
+                    </li>
+                    <li class="nav-item" id="menu-calendar">
+                        <a class="nav-link" href="/calendario/">
+                            <i class="fas fa-calendar-alt"></i> Calendario de Citas
+                        </a>
+                    </li>
+                </ul>
+                
+                <hr>
+                
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link text-danger" href="#" id="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2" id="page-title">
+                    <i class="fas fa-home"></i> Panel Principal
+                </h1>
+            </div>
+            
+            <!-- Alert Messages -->
+            <div id="dashboard-alert" class="alert d-none" role="alert"></div>
+            
+            <!-- Dashboard Stats (visible para recepcionistas y veterinarios) -->
+            <div id="stats-section" class="d-none mb-4">
+                <div class="row g-4">
+                    <div class="col-md-3">
+                        <div class="card stat-card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-calendar-check fa-2x text-primary mb-2"></i>
+                                <h3 id="stat-appointments" class="mb-0">-</h3>
+                                <p class="text-muted mb-0">Citas Hoy</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card stat-card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-paw fa-2x text-success mb-2"></i>
+                                <h3 id="stat-pets" class="mb-0">-</h3>
+                                <p class="text-muted mb-0">Mascotas</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card stat-card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-clock fa-2x text-warning mb-2"></i>
+                                <h3 id="stat-pending" class="mb-0">-</h3>
+                                <p class="text-muted mb-0">Pendientes</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card stat-card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-box fa-2x text-info mb-2"></i>
+                                <h3 id="stat-products" class="mb-0">-</h3>
+                                <p class="text-muted mb-0">Productos</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Content Area -->
+            <div id="content-area">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-calendar-alt"></i> Próximas Citas
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="upcoming-appointments" class="list-group">
+                                    <p class="text-muted">Cargando...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/dashboard.js?v=3.0"></script>
+<script>
+// Asegurar que el navbar se actualice correctamente
+document.addEventListener('DOMContentLoaded', function() {
+    // Función para ocultar menu-pets si es veterinario
+    function hidePetsMenuIfVet() {
+        const userData = getUserData();
+        if (userData && userData.role === 'VETERINARIO') {
+            const menuPets = document.getElementById('menu-pets');
+            if (menuPets) {
+                menuPets.style.setProperty('display', 'none', 'important');
+                menuPets.style.setProperty('visibility', 'hidden', 'important');
+                menuPets.classList.add('d-none');
+                // También ocultar el elemento padre si es necesario
+                const parent = menuPets.parentElement;
+                if (parent && parent.tagName === 'UL') {
+                    // No ocultar el UL completo, solo el elemento
+                }
+            }
+        }
+    }
+    
+    // Ejecutar inmediatamente
+    hidePetsMenuIfVet();
+    
+    setTimeout(function() {
+        const publicNav = document.getElementById('public-nav');
+        if (publicNav && isAuthenticated()) {
+            publicNav.style.display = 'none';
+            publicNav.classList.add('hidden');
+        }
+        updateAuthUI();
+        
+        // Ocultar menu-pets nuevamente
+        hidePetsMenuIfVet();
+        
+        // Configurar menú según rol
+        const userData = getUserData();
+        if (userData && userData.role && typeof setupMenuByRole === 'function') {
+            setupMenuByRole(userData.role);
+        }
+    }, 100);
+    
+    // También ejecutar después de un delay adicional para asegurar
+    setTimeout(function() {
+        hidePetsMenuIfVet();
+        const userData = getUserData();
+        if (userData && userData.role && typeof setupMenuByRole === 'function') {
+            setupMenuByRole(userData.role);
+        }
+    }, 500);
+    
+    // Usar MutationObserver para detectar cambios en el DOM
+    const observer = new MutationObserver(function(mutations) {
+        const userData = getUserData();
+        if (userData && userData.role === 'VETERINARIO') {
+            const menuPets = document.getElementById('menu-pets');
+            if (menuPets) {
+                const computedStyle = window.getComputedStyle(menuPets);
+                if (computedStyle.display !== 'none') {
+                    menuPets.style.setProperty('display', 'none', 'important');
+                    menuPets.style.setProperty('visibility', 'hidden', 'important');
+                }
+            }
+        }
+    });
+    
+    // Observar cambios en el sidebar
+    const sidebar = document.querySelector('.sidebar');
+    if (sidebar) {
+        observer.observe(sidebar, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            attributeFilter: ['style', 'class']
+        });
+    }
+});
+</script>
+{% endblock %}
+

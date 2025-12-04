@@ -1,0 +1,514 @@
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+    background-color: #f8f9fa;
+}
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 0;
+}
+
+.hero-icon {
+    font-size: 15rem;
+    color: rgba(255, 255, 255, 0.2);
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+/* Service Cards */
+.service-card {
+    border: none;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    border-radius: 10px;
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+}
+
+.service-icon i {
+    font-size: 3rem;
+    color: #667eea;
+}
+
+/* About Icon */
+.about-icon {
+    font-size: 12rem;
+    color: rgba(102, 126, 234, 0.2);
+}
+
+/* Navbar */
+.navbar {
+    transition: all 0.3s;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+}
+
+.nav-link {
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.nav-link:hover {
+    color: #667eea !important;
+}
+
+/* Dropdown Menu */
+.dropdown-toggle::after {
+    margin-left: 0.5em;
+}
+
+.dropdown-menu {
+    border: none;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    margin-top: 0.5rem;
+}
+
+.dropdown-item {
+    padding: 0.75rem 1.25rem;
+    transition: all 0.2s;
+}
+
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+    color: #667eea;
+}
+
+.dropdown-item.text-danger:hover {
+    background-color: #fee;
+    color: #dc3545;
+}
+
+/* Ocultar navegación pública cuando está autenticado */
+#public-nav.hidden {
+    display: none !important;
+}
+
+/* Asegurar que el dropdown funcione */
+.navbar-nav .dropdown-menu {
+    z-index: 1050;
+}
+
+/* Ocultar elementos del sidebar según rol */
+.sidebar .nav-item.d-none {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+.sidebar #menu-pets.d-none {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/* Regla específica para veterinarios - ocultar Mis Mascotas */
+body:has(.sidebar) #menu-pets[style*="display: none"] {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/* Dashboard Styles */
+.sidebar {
+    min-height: 100vh;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar .nav-link {
+    color: #333;
+    padding: 12px 20px;
+    border-radius: 8px;
+    margin-bottom: 5px;
+    transition: all 0.3s;
+}
+
+.sidebar .nav-link:hover {
+    background-color: #e7f5ff;
+    color: #0d6efd;
+}
+
+.sidebar .nav-link.active {
+    background-color: #0d6efd;
+    color: white;
+}
+
+.sidebar .nav-link i {
+    width: 20px;
+    margin-right: 10px;
+}
+
+/* Stat Cards */
+.stat-card {
+    padding: 30px 20px;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    transition: all 0.3s;
+    background: white;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.stat-icon i {
+    font-size: 3rem;
+    color: #667eea;
+}
+
+.stat-card h3 {
+    font-size: 2.5rem;
+}
+
+/* Feature Cards */
+.feature-card {
+    padding: 40px 30px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s;
+    height: 100%;
+}
+
+.feature-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.feature-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    color: white;
+}
+
+.feature-icon i {
+    font-size: 2rem;
+}
+
+/* Quick Link Cards */
+.quick-link-card {
+    padding: 40px 30px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s;
+    height: 100%;
+    color: #333;
+}
+
+.quick-link-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.2);
+    color: #667eea;
+}
+
+.quick-link-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    color: white;
+    transition: all 0.3s;
+}
+
+.quick-link-card:hover .quick-link-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.quick-link-icon i {
+    font-size: 2rem;
+}
+
+/* Hero Image Container */
+.hero-image-container {
+    position: relative;
+    display: inline-block;
+}
+
+.floating-elements {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.floating-icon {
+    position: absolute;
+    font-size: 2.5rem;
+    animation: float 3s ease-in-out infinite;
+    opacity: 0.7;
+}
+
+.floating-icon i {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+/* Animations */
+.animate-fade-in {
+    animation: fadeIn 1s ease-in;
+}
+
+/* Cards */
+.card {
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.card-header {
+    background-color: white;
+    border-bottom: 2px solid #f0f0f0;
+    padding: 15px 20px;
+}
+
+/* Buttons */
+.btn {
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+}
+
+/* Forms */
+.form-control, .form-select {
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    padding: 10px 15px;
+    transition: all 0.3s;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+/* Alerts */
+.alert {
+    border-radius: 8px;
+    border: none;
+}
+
+/* Footer */
+footer {
+    background-color: #2d3748;
+}
+
+footer h5, footer h6 {
+    color: #e2e8f0;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+/* Loading Spinner */
+.spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+    border-width: 0.15em;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero-icon {
+        font-size: 8rem;
+    }
+    
+    .about-icon {
+        font-size: 6rem;
+    }
+    
+    .sidebar {
+        min-height: auto;
+    }
+    
+    .stat-card h3 {
+        font-size: 2rem;
+    }
+    
+    .stat-icon i {
+        font-size: 2rem;
+    }
+    
+    .feature-card,
+    .quick-link-card {
+        padding: 30px 20px;
+    }
+    
+    .floating-icon {
+        font-size: 1.5rem;
+    }
+    
+    .hero-section h1 {
+        font-size: 2rem !important;
+    }
+}
+
+/* Badge Styles */
+.badge {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+/* Table Styles */
+.table {
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table thead th {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+/* List Group */
+.list-group-item {
+    border: none;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 15px;
+    transition: background-color 0.3s;
+}
+
+.list-group-item:hover {
+    background-color: #f8f9fa;
+}
+
+.list-group-item:last-child {
+    border-bottom: none;
+}
+
+/* Modal */
+.modal-content {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.modal-footer {
+    border-top: 2px solid #f0f0f0;
+}
+
+/* Pet Card */
+.pet-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.pet-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+/* Appointment Card */
+.appointment-card {
+    border-left: 4px solid #0d6efd;
+}
+
+.appointment-card.status-pendiente {
+    border-left-color: #ffc107;
+}
+
+.appointment-card.status-confirmada {
+    border-left-color: #28a745;
+}
+
+.appointment-card.status-cancelada {
+    border-left-color: #dc3545;
+}
+
+/* Product Card */
+.product-card {
+    height: 100%;
+}
+
+.product-card img {
+    height: 200px;
+    object-fit: cover;
+}
+
+.product-price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #28a745;
+}
+
+/* Stock Badge */
+.stock-low {
+    background-color: #dc3545;
+    color: white;
+}
+
+.stock-ok {
+    background-color: #28a745;
+    color: white;
+}
+

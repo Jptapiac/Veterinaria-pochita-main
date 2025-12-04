@@ -1,0 +1,262 @@
+{% extends "base.html" %}
+
+{% block title %}Calendario de Citas - Veterinaria Pochita{% endblock %}
+
+{% block extra_css %}
+<style>
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 10px;
+    }
+    
+    .calendar-day {
+        border: 1px solid #dee2e6;
+        padding: 10px;
+        min-height: 100px;
+        cursor: pointer;
+        transition: all 0.3s;
+        background: white;
+    }
+    
+    .calendar-day:hover {
+        background: #f8f9fa;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .calendar-day.has-slots {
+        border-color: #28a745;
+    }
+    
+    .calendar-day.selected {
+        background: #e7f5ff;
+        border-color: #0d6efd;
+    }
+    
+    .calendar-day-header {
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+    
+    .calendar-day.other-month {
+        opacity: 0.4;
+    }
+    
+    .slot-badge {
+        font-size: 0.75rem;
+        margin-top: 5px;
+    }
+    
+    .time-slot-card {
+        cursor: pointer;
+        transition: all 0.3s;
+        border: 1px solid #dee2e6;
+    }
+    
+    .time-slot-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        border-color: #0d6efd;
+    }
+    
+    .time-slot-card.selected {
+        border: 2px solid #0d6efd;
+        background: #e7f5ff;
+        box-shadow: 0 2px 8px rgba(13, 110, 253, 0.3);
+    }
+    
+    .vet-section {
+        background: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .vet-name {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 1rem;
+    }
+    
+    .time-slots-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .time-slot-btn {
+        width: 100%;
+        padding: 1rem 1.5rem;
+        text-align: center;
+        border: 1px solid #0d6efd;
+        background: white;
+        color: #0d6efd;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        transition: all 0.2s;
+        cursor: pointer;
+    }
+    
+    .time-slot-btn:hover {
+        background: #0d6efd;
+        color: white;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 6px rgba(13, 110, 253, 0.3);
+    }
+    
+    .time-slot-btn.selected {
+        background: #0d6efd;
+        color: white;
+        box-shadow: 0 2px 8px rgba(13, 110, 253, 0.4);
+        font-weight: 700;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="h2">
+                <i class="fas fa-calendar-alt"></i> Calendario de Citas
+            </h1>
+            <p class="text-muted">Agenda tu hora de atención seleccionando fecha, veterinario y horario disponible</p>
+        </div>
+    </div>
+    
+    <!-- Alert Messages -->
+    <div id="calendar-alert" class="alert d-none" role="alert"></div>
+    
+    <!-- Calendar Navigation -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <button class="btn btn-outline-primary" id="prev-month">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <input type="month" class="form-control" id="month-selector">
+                        <button class="btn btn-outline-primary" id="next-month">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <select class="form-select" id="veterinarian-filter">
+                        <option value="">Todos los veterinarios</option>
+                    </select>
+                </div>
+                <div class="col-md-4 text-end">
+                    <h4 class="mb-0" id="current-month-label">...</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Calendar View (HU002) -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">
+                <i class="fas fa-calendar"></i> Vista Mensual - Disponibilidad por Veterinario
+            </h5>
+        </div>
+        <div class="card-body">
+            <!-- Day headers -->
+            <div class="calendar-grid mb-2">
+                <div class="text-center fw-bold">Lunes</div>
+                <div class="text-center fw-bold">Martes</div>
+                <div class="text-center fw-bold">Miércoles</div>
+                <div class="text-center fw-bold">Jueves</div>
+                <div class="text-center fw-bold">Viernes</div>
+                <div class="text-center fw-bold">Sábado</div>
+                <div class="text-center fw-bold">Domingo</div>
+            </div>
+            
+            <!-- Calendar grid -->
+            <div class="calendar-grid" id="calendar-grid">
+                <!-- Se llena dinámicamente con JavaScript -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Available Slots for Selected Day -->
+    <div class="card mb-4 d-none" id="slots-section">
+        <div class="card-header">
+            <h5 class="mb-0">
+                <i class="fas fa-clock"></i> Horarios Disponibles - <span id="selected-date-label"></span>
+            </h5>
+        </div>
+        <div class="card-body">
+            <div id="available-slots-container" class="row g-3">
+                <!-- Se llena dinámicamente -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Appointment Form -->
+    <div class="card d-none" id="appointment-form-section">
+        <div class="card-header">
+            <h5 class="mb-0">
+                <i class="fas fa-calendar-plus"></i> Confirmar Cita
+            </h5>
+        </div>
+        <div class="card-body">
+            <form id="appointment-form">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Fecha</label>
+                        <input type="text" class="form-control" id="form-date" readonly>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Horario</label>
+                        <input type="text" class="form-control" id="form-time" readonly>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Veterinario</label>
+                        <input type="text" class="form-control" id="form-vet" readonly>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Mascota *</label>
+                        <select class="form-select" id="form-pet" required>
+                            <!-- Las mascotas se cargan dinámicamente -->
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Motivo de Consulta *</label>
+                    <textarea class="form-control" id="form-reason" rows="3" required 
+                              placeholder="Describa el motivo de la consulta"></textarea>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Notas Adicionales</label>
+                    <textarea class="form-control" id="form-notes" rows="2" 
+                              placeholder="Información adicional (opcional)"></textarea>
+                </div>
+                
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-check"></i> Confirmar Cita
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="cancel-form-btn">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/calendar.js?v=2.1"></script>
+{% endblock %}
+
