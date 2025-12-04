@@ -98,7 +98,6 @@ function loadSection(section) {
         'pets': '<i class="fas fa-paw"></i> Mis Mascotas',
         'appointments': isVet ? '<i class="fas fa-calendar-alt"></i> Mi Agenda' : (isReceptionist ? '<i class="fas fa-clock"></i> Gestión de Citas' : '<i class="fas fa-clock"></i> Mis Citas'),
         'medical-records': '<i class="fas fa-file-medical"></i> Fichas Médicas',
-        'products': '<i class="fas fa-shopping-bag"></i> Productos',
         'profile': '<i class="fas fa-user"></i> Mi Perfil'
     };
     
@@ -120,9 +119,6 @@ function loadSection(section) {
             break;
         case 'appointments':
             loadAppointmentsSection(contentArea);
-            break;
-        case 'products':
-            loadProductsSection(contentArea);
             break;
         case 'profile':
             loadProfileSection(contentArea);
@@ -902,11 +898,223 @@ async function loadPetsSection(container) {
 }
 
 async function loadAppointmentsSection(container) {
-    container.innerHTML = '<div class="alert alert-info">Sección de citas - Funcionalidad en desarrollo</div>';
-}
-
-function loadProductsSection(container) {
-    container.innerHTML = '<div class="alert alert-info">Sección de productos - Funcionalidad en desarrollo</div>';
+    container.innerHTML = '<div class="text-center py-5"><div class="spinner-border"></div></div>';
+    
+    const userData = getUserData();
+    const isVet = userData && userData.role === 'VETERINARIO';
+    const isReceptionist = userData && userData.role === 'RECEPCIONISTA';
+    
+    try {
+        const response = await authenticatedFetch('/api/appointments/');
+        
+        if (!response.ok) {
+            container.innerHTML = '<p class="text-danger">Error al cargar las citas</p>';
+            return;
+        }
+        
+        const data = await response.json();
+        const appointments = data.results || data;
+        
+        // Filtrar y ordenar citas
+        let filteredAppointments = appointments;
+        
+        if (isVet) {
+            // Para veterinarios, solo sus citas (ya viene filtrado del backend, pero por seguridad)
+            filteredAppointments = appointments.filter(apt => apt.veterinarian === userData.id);
+        } else if (!isReceptionist) {
+            // Para clientes, solo sus citas
+            filteredAppointments = appointments.filter(apt => apt.client === userData.id);
+        }
+        
+        // Ordenar por fecha (próximas primero), luego por hora
+        filteredAppointments.sort((a, b) => {
+            const dateA = new Date(a.appointment_date + 'T' + (a.appointment_time || '00:00:00'));
+            const dateB = new Date(b.appointment_date + 'T' + (b.appointment_time || '00:00:00'));
+            return dateA - dateB;
+        });
+        
+        // Separar citas por estado: próximas (futuras), pasadas, canceladas
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        const upcoming = [];
+        const past = [];
+        const canceled = [];
+        
+        filteredAppointments.forEach(apt => {
+            if (apt.status === 'CANCELADA') {
+                canceled.push(apt);
+            } else {
+                const aptDate = new Date(apt.appointment_date);
+                aptDate.setHours(0, 0, 0, 0);
+                
+                if (aptDate >= today) {
+                    upcoming.push(apt);
+                } else {
+                    past.push(apt);
+                }
+            }
+        });
+        
+        // Construir HTML
+        let html = `
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-calendar-alt"></i> ${isVet ? 'Mi Agenda' : (isReceptionist ? 'Gestión de Citas' : 'Mis Citas')}
+                    </h5>
+                </div>
+                <div class="card-body">
+        `;
+        
+        if (upcoming.length === 0 && past.length === 0 && canceled.length === 0) {
+            html += `
+                <div class="text-center py-5">
+                    <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">No hay citas registradas</p>
+                    <p class="text-muted small">${isVet ? 'Tus citas asignadas aparecerán aquí' : 'Tus citas aparecerán aquí'}</p>
+                </div>
+            `;
+        } else {
+            // Próximas citas
+            if (upcoming.length > 0) {
+                html += `
+                    <h6 class="mb-3 text-primary"><i class="fas fa-arrow-up"></i> Próximas Citas (${upcoming.length})</h6>
+                    <div class="list-group mb-4">
+                        ${upcoming.map(apt => `
+                            <div class="list-group-item">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <h6 class="mb-0">
+                                                <i class="fas fa-paw text-primary"></i> ${apt.pet_name || 'Mascota'}
+                                            </h6>
+                                            ${getStatusBadge(apt.status)}
+                                        </div>
+                                        <p class="mb-1">
+                                            <i class="fas fa-user"></i> <strong>Cliente:</strong> ${apt.client_name || 'N/A'}
+                                        </p>
+                                        <p class="mb-1">
+                                            <i class="fas fa-calendar"></i> <strong>Fecha:</strong> ${formatDate(apt.appointment_date)}
+                                        </p>
+                                        <p class="mb-1">
+                                            <i class="fas fa-clock"></i> <strong>Hora:</strong> ${formatTime(apt.time_slot?.start_time || apt.appointment_time || '')}
+                                        </p>
+                                        ${apt.reason ? `<p class="mb-1"><strong>Motivo:</strong> ${apt.reason}</p>` : ''}
+                                        ${apt.notes ? `<p class="mb-0 text-muted"><small><i class="fas fa-sticky-note"></i> ${apt.notes}</small></p>` : ''}
+                                    </div>
+                                    ${isVet && apt.status === 'CONFIRMADA' ? `
+                                        <button class="btn btn-sm btn-success ms-3" onclick="markAppointmentAttended(${apt.id})" title="Marcar como atendida">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+            
+            // Citas pasadas
+            if (past.length > 0) {
+                html += `
+                    <h6 class="mb-3 text-secondary"><i class="fas fa-history"></i> Citas Pasadas (${past.length})</h6>
+                    <div class="list-group mb-4">
+                        ${past.map(apt => `
+                            <div class="list-group-item">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <h6 class="mb-0">
+                                                <i class="fas fa-paw text-secondary"></i> ${apt.pet_name || 'Mascota'}
+                                            </h6>
+                                            ${getStatusBadge(apt.status)}
+                                        </div>
+                                        <p class="mb-1">
+                                            <i class="fas fa-user"></i> <strong>Cliente:</strong> ${apt.client_name || 'N/A'}
+                                        </p>
+                                        <p class="mb-1">
+                                            <i class="fas fa-calendar"></i> <strong>Fecha:</strong> ${formatDate(apt.appointment_date)}
+                                        </p>
+                                        <p class="mb-1">
+                                            <i class="fas fa-clock"></i> <strong>Hora:</strong> ${formatTime(apt.time_slot?.start_time || apt.appointment_time || '')}
+                                        </p>
+                                        ${apt.reason ? `<p class="mb-1"><strong>Motivo:</strong> ${apt.reason}</p>` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+            
+            // Citas canceladas (solo si hay)
+            if (canceled.length > 0 && !isVet) {
+                html += `
+                    <h6 class="mb-3 text-danger"><i class="fas fa-times-circle"></i> Citas Canceladas (${canceled.length})</h6>
+                    <div class="list-group">
+                        ${canceled.map(apt => `
+                            <div class="list-group-item">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <h6 class="mb-0">
+                                                <i class="fas fa-paw text-danger"></i> ${apt.pet_name || 'Mascota'}
+                                            </h6>
+                                            ${getStatusBadge(apt.status)}
+                                        </div>
+                                        <p class="mb-1">
+                                            <i class="fas fa-calendar"></i> <strong>Fecha:</strong> ${formatDate(apt.appointment_date)}
+                                        </p>
+                                        <p class="mb-1">
+                                            <i class="fas fa-clock"></i> <strong>Hora:</strong> ${formatTime(apt.time_slot?.start_time || apt.appointment_time || '')}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+        }
+        
+        html += `
+                </div>
+            </div>
+        `;
+        
+        container.innerHTML = html;
+        
+        // Si es veterinario, configurar función para marcar como atendida
+        if (isVet) {
+            window.markAppointmentAttended = async function(appointmentId) {
+                if (!confirm('¿Deseas marcar esta cita como atendida?')) {
+                    return;
+                }
+                
+                try {
+                    const response = await authenticatedFetch(`/api/appointments/${appointmentId}/attend/`, {
+                        method: 'POST'
+                    });
+                    
+                    if (response.ok) {
+                        showAlert('dashboard-alert', 'Cita marcada como atendida exitosamente', 'success');
+                        // Recargar la sección
+                        loadAppointmentsSection(container);
+                    } else {
+                        const errorData = await response.json();
+                        showAlert('dashboard-alert', errorData.error || 'Error al marcar la cita como atendida', 'danger');
+                    }
+                } catch (error) {
+                    console.error('Error marking appointment as attended:', error);
+                    showAlert('dashboard-alert', 'Error al marcar la cita como atendida', 'danger');
+                }
+            };
+        }
+    } catch (error) {
+        console.error('Error loading appointments:', error);
+        container.innerHTML = '<p class="text-danger">Error al cargar las citas</p>';
+    }
 }
 
 function loadProfileSection(container) {
