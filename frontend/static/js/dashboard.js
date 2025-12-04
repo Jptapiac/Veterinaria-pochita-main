@@ -894,7 +894,106 @@ function showCreateMedicalRecordModal(petId, petName) {
 // ==================== OTRAS SECCIONES (PLACEHOLDER) ====================
 
 async function loadPetsSection(container) {
-    container.innerHTML = '<div class="alert alert-info">Sección de mascotas - Funcionalidad en desarrollo</div>';
+    container.innerHTML = '<div class="text-center py-3"><div class="spinner-border spinner-border-sm"></div> Cargando mascotas...</div>';
+    
+    try {
+        const userData = getUserData();
+        const response = await authenticatedFetch('/api/pets/');
+        
+        if (response.ok) {
+            const data = await response.json();
+            const pets = data.results || data;
+            
+            console.log('Mascotas recibidas:', pets);
+            console.log('Usuario actual:', userData);
+            
+            // El backend ya filtra las mascotas según el rol del usuario
+            // Solo necesitamos usar las mascotas que vienen de la API
+            const userPets = pets || [];
+            
+            if (userPets.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-5">
+                        <i class="fas fa-paw fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted mb-2">No tienes mascotas registradas</h5>
+                        <p class="text-muted mb-4">Registra tu primera mascota para comenzar.</p>
+                        <button class="btn btn-primary btn-lg" onclick="showRegisterPetModal()">
+                            <i class="fas fa-plus-circle"></i> Registrar Mascota
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Mostrar las mascotas en cards
+            container.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4><i class="fas fa-paw"></i> Mis Mascotas</h4>
+                    ${userData.role === 'CLIENTE' ? `
+                        <button class="btn btn-primary" onclick="showRegisterPetModal()">
+                            <i class="fas fa-plus"></i> Registrar Nueva Mascota
+                        </button>
+                    ` : ''}
+                </div>
+                <div class="row g-4">
+                    ${userPets.map(pet => `
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-start mb-3">
+                                        <div class="flex-shrink-0">
+                                            ${pet.photo ? 
+                                                `<img src="${pet.photo}" alt="${pet.name}" class="rounded" style="width: 80px; height: 80px; object-fit: cover;">` :
+                                                `<div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                                                    <i class="fas fa-${pet.species === 'PERRO' ? 'dog' : 'cat'} fa-2x text-muted"></i>
+                                                </div>`
+                                            }
+                                        </div>
+                                        <div class="flex-grow-1 ms-3">
+                                            <h5 class="card-title mb-1">${pet.name}</h5>
+                                            <p class="text-muted mb-0 small">
+                                                <i class="fas fa-${pet.species === 'PERRO' ? 'dog' : 'cat'}"></i> 
+                                                ${pet.species === 'PERRO' ? 'Perro' : 'Gato'}
+                                                ${pet.breed ? ` - ${pet.breed}` : ''}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <p class="mb-1"><i class="fas fa-${pet.gender === 'MACHO' ? 'mars' : 'venus'} text-primary"></i> <strong>Sexo:</strong> ${pet.gender === 'MACHO' ? 'Macho' : 'Hembra'}</p>
+                                        ${pet.birth_date ? `<p class="mb-1"><i class="fas fa-birthday-cake text-primary"></i> <strong>Edad:</strong> ${pet.age ? pet.age + ' años' : 'N/A'}</p>` : ''}
+                                        ${pet.color ? `<p class="mb-1"><i class="fas fa-palette text-primary"></i> <strong>Color:</strong> ${pet.color}</p>` : ''}
+                                        ${pet.weight ? `<p class="mb-1"><i class="fas fa-weight text-primary"></i> <strong>Peso:</strong> ${pet.weight} kg</p>` : ''}
+                                        ${pet.microchip ? `<p class="mb-1"><i class="fas fa-microchip text-primary"></i> <strong>Microchip:</strong> ${pet.microchip}</p>` : ''}
+                                    </div>
+                                    ${pet.notes ? `<p class="text-muted small mb-3"><i class="fas fa-sticky-note"></i> ${pet.notes}</p>` : ''}
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-sm btn-outline-primary flex-fill" onclick="viewPetHistory(${pet.id})">
+                                            <i class="fas fa-file-medical"></i> Ver Historial
+                                        </button>
+                                        ${userData.role === 'CLIENTE' ? `
+                                            <button class="btn btn-sm btn-outline-secondary" onclick="editPet(${pet.id})">
+                                                <i class="fas fa-edit"></i> Editar
+                                            </button>
+                                        ` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        } else {
+            container.innerHTML = '<div class="alert alert-danger">Error al cargar las mascotas</div>';
+        }
+    } catch (error) {
+        console.error('Error loading pets:', error);
+        container.innerHTML = '<div class="alert alert-danger">Error al cargar las mascotas</div>';
+    }
+}
+
+function showRegisterPetModal() {
+    // Redirigir a la página de agendamiento para registrar mascota
+    window.location.href = '/agendar/';
 }
 
 async function loadAppointmentsSection(container) {
@@ -1142,3 +1241,5 @@ window.navigateToSection = navigateToSection;
 window.viewPetHistory = viewPetHistory;
 window.showCreateMedicalRecordModalForVet = showCreateMedicalRecordModalForVet;
 window.showCreateMedicalRecordModal = showCreateMedicalRecordModal;
+window.showRegisterPetModal = showRegisterPetModal;
+window.loadPetsSection = loadPetsSection;

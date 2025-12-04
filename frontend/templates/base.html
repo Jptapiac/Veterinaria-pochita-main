@@ -15,11 +15,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/style.css?v=4.1">
     
     {% block extra_css %}{% endblock %}
 </head>
-<body>
+<body class="{% block body_class %}{% endblock %}">
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
         <div class="container">
@@ -57,7 +57,7 @@
     </nav>
     
     <!-- Main Content -->
-    <main style="margin-top: 70px;">
+    <main class="{% block main_class %}{% endblock %}" style="margin-top: 70px;">
         {% block content %}{% endblock %}
     </main>
     

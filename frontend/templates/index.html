@@ -4,53 +4,65 @@
 
 {% block content %}
 <!-- Hero Section -->
-<section class="hero-section">
-    <div class="container">
-        <div class="row align-items-center min-vh-100">
-            <div class="col-lg-6">
-                <h1 class="display-3 fw-bold mb-4 animate-fade-in">
-                    Cuidamos a tus mascotas con <span class="text-white bg-primary px-3 py-1 rounded">amor</span> y <span class="text-white bg-primary px-3 py-1 rounded">profesionalismo</span>
-                </h1>
-                <p class="lead mb-4 fs-5">
-                    Atención veterinaria de calidad, venta de productos y servicios especializados para el bienestar de tus compañeros.
-                </p>
-                <div class="d-flex gap-3 flex-wrap">
-                    <a href="/agendar/" class="btn btn-light btn-lg px-4 py-3 shadow-lg">
-                        <i class="fas fa-calendar-alt"></i> Agendar Cita
-                    </a>
-                    <a href="/servicios/" class="btn btn-outline-light btn-lg px-4 py-3">
-                        <i class="fas fa-info-circle"></i> Conocer Servicios
-                    </a>
-                </div>
-                <div class="mt-5 d-flex gap-4 flex-wrap">
-                    <div class="d-flex align-items-center">
-                        <i class="fas fa-check-circle text-success me-2 fs-4"></i>
-                        <span>Atención 24/7</span>
+<section class="hero-section hero-sky-bg">
+    <div class="clouds-container">
+        <div class="cloud cloud1"></div>
+        <div class="cloud cloud2"></div>
+        <div class="cloud cloud3"></div>
+        <div class="cloud cloud4"></div>
+        <div class="cloud cloud5"></div>
+    </div>
+    <div class="container position-relative">
+        <div class="row align-items-center py-5">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <div class="hero-content">
+                    <p class="fw-semibold mb-3 text-uppercase letter-spacing" style="color: white !important; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">Veterinaria Especializada</p>
+                    <h1 class="display-4 fw-bold mb-4 animate-fade-in" style="color: white !important; text-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+                        Cuidado integral para tu mejor amigo
+                    </h1>
+                    <p class="lead mb-4 fs-5" style="color: white !important; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+                        Profesionales certificados comprometidos con el bienestar de tu mascota. 
+                        Ofrecemos atención de excelencia con tecnología avanzada y un trato cálido y personalizado.
+                    </p>
+                    <div class="d-flex gap-3 flex-wrap mb-5">
+                        <a href="/agendar/" class="btn btn-primary btn-lg px-5 py-3 shadow-sm">
+                            <i class="fas fa-calendar-alt me-2"></i> Agendar Cita
+                        </a>
+                        <a href="/servicios/" class="btn btn-outline-light btn-lg px-5 py-3" style="border-color: white; color: white;">
+                            <i class="fas fa-info-circle me-2"></i> Nuestros Servicios
+                        </a>
                     </div>
-                    <div class="d-flex align-items-center">
-                        <i class="fas fa-check-circle text-success me-2 fs-4"></i>
-                        <span>Profesionales Certificados</span>
-                    </div>
-                    <div class="d-flex align-items-center">
-                        <i class="fas fa-check-circle text-success me-2 fs-4"></i>
-                        <span>Tecnología Avanzada</span>
+                    <div class="row g-4">
+                        <div class="col-6 col-md-4">
+                            <div class="feature-highlight">
+                                <div class="feature-icon-wrapper-sky">
+                                    <i class="fas fa-clock text-primary"></i>
+                                </div>
+                                <p class="mb-0 small fw-semibold" style="color: white !important; text-shadow: 0 1px 3px rgba(0,0,0,0.3);">Atención 24/7</p>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <div class="feature-highlight">
+                                <div class="feature-icon-wrapper-sky">
+                                        <i class="fas fa-user-md text-primary"></i>
+                                </div>
+                                <p class="mb-0 small fw-semibold" style="color: white !important; text-shadow: 0 1px 3px rgba(0,0,0,0.3);">Profesionales Certificados</p>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <div class="feature-highlight">
+                                <div class="feature-icon-wrapper-sky">
+                                    <i class="fas fa-microscope text-primary"></i>
+                                </div>
+                                <p class="mb-0 small fw-semibold" style="color: white !important; text-shadow: 0 1px 3px rgba(0,0,0,0.3);">Tecnología Avanzada</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="col-lg-6 text-center">
                 <div class="hero-image-container">
-                    <i class="fas fa-dog hero-icon"></i>
-                    <div class="floating-elements">
-                        <div class="floating-icon" style="top: 20%; left: 10%; animation-delay: 0s;">
-                            <i class="fas fa-heart text-danger"></i>
-                        </div>
-                        <div class="floating-icon" style="top: 60%; right: 15%; animation-delay: 1s;">
-                            <i class="fas fa-paw text-primary"></i>
-                        </div>
-                        <div class="floating-icon" style="bottom: 20%; left: 20%; animation-delay: 2s;">
-                            <i class="fas fa-stethoscope text-success"></i>
-                        </div>
-                    </div>
+                    <i class="fas fa-dog hero-icon-sky"></i>
                 </div>
             </div>
         </div>
@@ -58,43 +70,43 @@
 </section>
 
 <!-- Estadísticas Section -->
-<section class="py-5 bg-white">
+<section class="py-5 bg-light border-top">
     <div class="container">
         <div class="row g-4 text-center">
             <div class="col-md-3 col-6">
-                <div class="stat-card">
-                    <div class="stat-icon mb-3">
-                        <i class="fas fa-users text-primary"></i>
+                <div class="stat-card-professional">
+                    <div class="stat-icon-professional mb-3">
+                        <i class="fas fa-users"></i>
                     </div>
                     <h3 class="fw-bold text-primary mb-2">500+</h3>
-                    <p class="text-muted mb-0">Clientes Satisfechos</p>
+                    <p class="text-muted mb-0 small">Clientes Satisfechos</p>
                 </div>
             </div>
             <div class="col-md-3 col-6">
-                <div class="stat-card">
-                    <div class="stat-icon mb-3">
-                        <i class="fas fa-paw text-primary"></i>
+                <div class="stat-card-professional">
+                    <div class="stat-icon-professional mb-3">
+                        <i class="fas fa-paw"></i>
                     </div>
                     <h3 class="fw-bold text-primary mb-2">1000+</h3>
-                    <p class="text-muted mb-0">Mascotas Atendidas</p>
+                    <p class="text-muted mb-0 small">Mascotas Atendidas</p>
                 </div>
             </div>
             <div class="col-md-3 col-6">
-                <div class="stat-card">
-                    <div class="stat-icon mb-3">
-                        <i class="fas fa-user-md text-primary"></i>
+                <div class="stat-card-professional">
+                    <div class="stat-icon-professional mb-3">
+                        <i class="fas fa-user-md"></i>
                     </div>
                     <h3 class="fw-bold text-primary mb-2">10+</h3>
-                    <p class="text-muted mb-0">Años de Experiencia</p>
+                    <p class="text-muted mb-0 small">Años de Experiencia</p>
                 </div>
             </div>
             <div class="col-md-3 col-6">
-                <div class="stat-card">
-                    <div class="stat-icon mb-3">
-                        <i class="fas fa-star text-primary"></i>
+                <div class="stat-card-professional">
+                    <div class="stat-icon-professional mb-3">
+                        <i class="fas fa-star"></i>
                     </div>
                     <h3 class="fw-bold text-primary mb-2">4.9/5</h3>
-                    <p class="text-muted mb-0">Calificación Promedio</p>
+                    <p class="text-muted mb-0 small">Calificación Promedio</p>
                 </div>
             </div>
         </div>
@@ -102,15 +114,19 @@
 </section>
 
 <!-- Por qué elegirnos Section -->
-<section class="py-5 bg-light">
+<section class="py-5 bg-white">
     <div class="container">
-        <h2 class="text-center mb-5">
-            <i class="fas fa-heart text-primary"></i> ¿Por qué elegirnos?
-        </h2>
+        <div class="text-center mb-5">
+            <p class="text-primary fw-semibold mb-2 text-uppercase small letter-spacing">Nuestros Valores</p>
+            <h2 class="display-5 fw-bold mb-3">¿Por qué elegirnos?</h2>
+            <p class="text-muted col-lg-6 mx-auto">
+                Comprometidos con la excelencia en el cuidado veterinario y el bienestar de cada mascota
+            </p>
+        </div>
         <div class="row g-4">
             <div class="col-md-4">
-                <div class="feature-card text-center h-100">
-                    <div class="feature-icon mb-3">
+                <div class="feature-card-professional text-center h-100">
+                    <div class="feature-icon-professional mb-4">
                         <i class="fas fa-shield-alt"></i>
                     </div>
                     <h5 class="fw-bold mb-3">Confianza y Seguridad</h5>
@@ -121,20 +137,20 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="feature-card text-center h-100">
-                    <div class="feature-icon mb-3">
+                <div class="feature-card-professional text-center h-100">
+                    <div class="feature-icon-professional mb-4">
                         <i class="fas fa-clock"></i>
                     </div>
                     <h5 class="fw-bold mb-3">Atención Rápida</h5>
                     <p class="text-muted">
                         Sistema de agendamiento eficiente y atención de emergencias 24/7. 
-                        No esperes, agenda tu cita ahora mismo.
+                        Respuesta inmediata cuando más lo necesitas.
                     </p>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="feature-card text-center h-100">
-                    <div class="feature-icon mb-3">
+                <div class="feature-card-professional text-center h-100">
+                    <div class="feature-icon-professional mb-4">
                         <i class="fas fa-heart"></i>
                     </div>
                     <h5 class="fw-bold mb-3">Atención Personalizada</h5>
@@ -148,63 +164,43 @@
     </div>
 </section>
 
-<!-- CTA Section -->
-<section class="py-5 bg-primary text-white">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-8">
-                <h2 class="display-5 fw-bold mb-3">
-                    <i class="fas fa-calendar-check"></i> ¿Listo para cuidar a tu mascota?
-                </h2>
-                <p class="lead mb-0">
-                    Agenda una cita hoy mismo y dale a tu compañero el mejor cuidado veterinario.
-                </p>
-            </div>
-            <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
-                <a href="/agendar/" class="btn btn-light btn-lg px-5 py-3 shadow-lg">
-                    <i class="fas fa-calendar-alt"></i> Agendar Ahora
-                </a>
-            </div>
-        </div>
-    </div>
-</section>
-
 <!-- Enlaces rápidos Section -->
-<section class="py-5">
+<section class="py-5 bg-light border-top">
     <div class="container">
-        <h2 class="text-center mb-5">
-            <i class="fas fa-link text-primary"></i> Explora Nuestros Servicios
-        </h2>
+        <div class="text-center mb-5">
+            <p class="text-primary fw-semibold mb-2 text-uppercase small letter-spacing">Explora</p>
+            <h2 class="display-5 fw-bold mb-3">Nuestros Servicios</h2>
+        </div>
         <div class="row g-4">
             <div class="col-md-4">
                 <a href="/servicios/" class="text-decoration-none">
-                    <div class="quick-link-card text-center h-100">
-                        <div class="quick-link-icon mb-3">
+                    <div class="quick-link-card-professional text-center h-100">
+                        <div class="quick-link-icon-professional mb-4">
                             <i class="fas fa-stethoscope"></i>
                         </div>
-                        <h5 class="fw-bold mb-2">Nuestros Servicios</h5>
+                        <h5 class="fw-bold mb-3">Nuestros Servicios</h5>
                         <p class="text-muted mb-0">Conoce todos los servicios que ofrecemos para tu mascota</p>
                     </div>
                 </a>
             </div>
             <div class="col-md-4">
                 <a href="/nosotros/" class="text-decoration-none">
-                    <div class="quick-link-card text-center h-100">
-                        <div class="quick-link-icon mb-3">
+                    <div class="quick-link-card-professional text-center h-100">
+                        <div class="quick-link-icon-professional mb-4">
                             <i class="fas fa-building"></i>
                         </div>
-                        <h5 class="fw-bold mb-2">Sobre Nosotros</h5>
+                        <h5 class="fw-bold mb-3">Sobre Nosotros</h5>
                         <p class="text-muted mb-0">Conoce nuestra historia, valores y equipo profesional</p>
                     </div>
                 </a>
             </div>
             <div class="col-md-4">
                 <a href="/contacto/" class="text-decoration-none">
-                    <div class="quick-link-card text-center h-100">
-                        <div class="quick-link-icon mb-3">
+                    <div class="quick-link-card-professional text-center h-100">
+                        <div class="quick-link-icon-professional mb-4">
                             <i class="fas fa-envelope"></i>
                         </div>
-                        <h5 class="fw-bold mb-2">Contáctanos</h5>
+                        <h5 class="fw-bold mb-3">Contáctanos</h5>
                         <p class="text-muted mb-0">Estamos aquí para ayudarte. Contáctanos cuando lo necesites</p>
                     </div>
                 </a>
