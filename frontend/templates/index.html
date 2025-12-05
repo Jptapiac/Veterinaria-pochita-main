@@ -3,6 +3,54 @@
 {% block title %}Inicio - Veterinaria Pochita{% endblock %}
 
 {% block content %}
+<!-- Carrusel de Imágenes -->
+<div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
+    </div>
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="/static/images/vet.png" class="d-block w-100 carousel-img" alt="Banner Veterinaria Pochita - Múltiples perros">
+            <div class="carousel-caption d-none d-md-block">
+                <h2 class="display-4 fw-bold mb-3">Veterinaria Pochita</h2>
+                <p class="lead">Cuidado integral para tu mejor amigo</p>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <img src="/static/images/vete.png" class="d-block w-100 carousel-img" alt="Clínica Veterinaria - Profesionales y mascotas">
+            <div class="carousel-caption d-none d-md-block">
+                <h2 class="display-4 fw-bold mb-3">Profesionales Certificados</h2>
+                <p class="lead">Atención de excelencia con tecnología avanzada</p>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <img src="/static/images/6f08ac40-fcb8-4c87-8109-5280fdaf25c5.png" class="d-block w-100 carousel-img" alt="Veterinaria Pochita">
+            <div class="carousel-caption d-none d-md-block">
+                <h2 class="display-4 fw-bold mb-3">Cuidado Especializado</h2>
+                <p class="lead">Tu mascota en las mejores manos</p>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <img src="/static/images/e478ff35-ffcf-47bd-9801-8b4d8241654b.png" class="d-block w-100 carousel-img" alt="Veterinaria Pochita">
+            <div class="carousel-caption d-none d-md-block">
+                <h2 class="display-4 fw-bold mb-3">Excelencia en el Cuidado</h2>
+                <p class="lead">Comprometidos con el bienestar de tu compañero</p>
+            </div>
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Anterior</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Siguiente</span>
+    </button>
+</div>
+
 <!-- Hero Section -->
 <section class="hero-section hero-sky-bg">
     <div class="clouds-container">
@@ -27,9 +75,6 @@
                     <div class="d-flex gap-3 flex-wrap mb-5">
                         <a href="/agendar/" class="btn btn-primary btn-lg px-5 py-3 shadow-sm">
                             <i class="fas fa-calendar-alt me-2"></i> Agendar Cita
-                        </a>
-                        <a href="/servicios/" class="btn btn-outline-light btn-lg px-5 py-3" style="border-color: white; color: white;">
-                            <i class="fas fa-info-circle me-2"></i> Nuestros Servicios
                         </a>
                     </div>
                     <div class="row g-4">
@@ -61,8 +106,9 @@
                 </div>
             </div>
             <div class="col-lg-6 text-center">
-                <div class="hero-image-container">
+                <div class="hero-image-container d-flex align-items-center justify-content-center">
                     <i class="fas fa-dog hero-icon-sky"></i>
+                    <i class="fas fa-cat hero-icon-cat"></i>
                 </div>
             </div>
         </div>
@@ -70,7 +116,7 @@
 </section>
 
 <!-- Estadísticas Section -->
-<section class="py-5 bg-light border-top">
+<section class="py-5 stats-section border-top">
     <div class="container">
         <div class="row g-4 text-center">
             <div class="col-md-3 col-6">
